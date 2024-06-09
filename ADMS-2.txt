@@ -1,0 +1,207 @@
+CREATE TABLE DEPT
+       (DEPTNO NUMBER(2) CONSTRAINT PK_DEPT PRIMARY KEY,
+	DNAME VARCHAR2(14) ,
+	LOC VARCHAR2(13) ) ;
+CREATE TABLE EMP
+       (EMPNO NUMBER(4) CONSTRAINT PK_EMP PRIMARY KEY,
+	ENAME VARCHAR2(10),
+	JOB VARCHAR2(9),
+	MGR NUMBER(4),
+	HIREDATE DATE,
+	SAL NUMBER(7,2),
+	COMM NUMBER(7,2),
+	DEPTNO NUMBER(2) CONSTRAINT FK_DEPTNO REFERENCES DEPT);
+INSERT INTO DEPT VALUES
+	(10,'ACCOUNTING','NEW YORK');
+INSERT INTO DEPT VALUES (20,'RESEARCH','DALLAS');
+INSERT INTO DEPT VALUES
+	(30,'SALES','CHICAGO');
+INSERT INTO DEPT VALUES
+	(40,'OPERATIONS','BOSTON');
+INSERT INTO EMP VALUES
+(7369,'SMITH','CLERK',7902,to_date('17-12-1980','dd-mm-yyyy'),800,NULL,20);
+INSERT INTO EMP VALUES
+(7499,'ALLEN','SALESMAN',7698,to_date('20-2-1981','dd-mm-yyyy'),1600,300,30);
+INSERT INTO EMP VALUES
+(7521,'WARD','SALESMAN',7698,to_date('22-2-1981','dd-mm-yyyy'),1250,500,30);
+INSERT INTO EMP VALUES
+(7566,'JONES','MANAGER',7839,to_date('2-4-1981','dd-mm-yyyy'),2975,NULL,20);
+INSERT INTO EMP VALUES
+(7654,'MARTIN','SALESMAN',7698,to_date('28-9-1981','dd-mm-yyyy'),1250,1400,30);
+INSERT INTO EMP VALUES
+(7698,'BLAKE','MANAGER',7839,to_date('1-5-1981','dd-mm-yyyy'),2850,NULL,30);
+INSERT INTO EMP VALUES
+(7782,'CLARK','MANAGER',7839,to_date('9-6-1981','dd-mm-yyyy'),2450,NULL,10);
+INSERT INTO EMP VALUES
+(7788,'SCOTT','ANALYST',7566,to_date('13-JUL-87')-85,3000,NULL,20);
+INSERT INTO EMP VALUES
+(7839,'KING','PRESIDENT',NULL,to_date('17-11-1981','dd-mm-yyyy'),5000,NULL,10);
+INSERT INTO EMP VALUES
+(7844,'TURNER','SALESMAN',7698,to_date('8-9-1981','dd-mm-yyyy'),1500,0,30);
+INSERT INTO EMP VALUES
+(7876,'ADAMS','CLERK',7788,to_date('13-JUL-87')-51,1100,NULL,20);
+INSERT INTO EMP VALUES
+(7900,'JAMES','CLERK',7698,to_date('3-12-1981','dd-mm-yyyy'),950,NULL,30);
+INSERT INTO EMP VALUES
+(7902,'FORD','ANALYST',7566,to_date('3-12-1981','dd-mm-yyyy'),3000,NULL,20);
+INSERT INTO EMP VALUES
+(7934,'MILLER','CLERK',7782,to_date('23-1-1982','dd-mm-yyyy'),1300,NULL,10);
+
+CREATE TABLE BONUS
+	(
+	ENAME VARCHAR2(10)	,
+	JOB VARCHAR2(9)  ,
+	SAL NUMBER,
+	COMM NUMBER
+	) ;
+CREATE TABLE SALGRADE
+      ( GRADE NUMBER,
+	LOSAL NUMBER,
+	HISAL NUMBER );
+
+INSERT INTO SALGRADE VALUES (1,700,1200);
+INSERT INTO SALGRADE VALUES (2,1201,1400);
+INSERT INTO SALGRADE VALUES (3,1401,2000);
+INSERT INTO SALGRADE VALUES (4,2001,3000);
+INSERT INTO SALGRADE VALUES (5,3001,9999);
+COMMIT;
+PL/SQL
+Part 01:
+1.Write a query that displays Hello ADBMS Section A using the concept of literal.
+
+DECLARE
+    var1 varchar2(100) := 'Hello ADBMS Section A';
+BEGIN
+    var1 := UPPER(var1);
+    dbms_output.put_line(var1); 
+END;
+
+
+2.Write a query that can add two numbers using the concept of inner block and outer block.
+DECLARE
+    num1 INT := 10;
+    num2 INT := 20;
+    result INT;
+BEGIN
+    DECLARE 
+        inner_result INT;
+    BEGIN
+        inner_result := num1 + num2;
+        result := inner_result;
+    END;
+    DBMS_OUTPUT.PUT_LINE('Result: ' || result);
+END;
+
+
+3.Write a query that can multiply three numbers using the concept of literal.
+DECLARE
+    num1 INT := 10;
+    num2 INT := 20;
+    num3 INT := 30;
+    result INT;
+BEGIN
+    result := num1 * num2 * num3;
+ 
+    DBMS_OUTPUT.PUT_LINE('Result: ' || result);
+END;
+
+
+4.Write a query that stores Hello World in a variable and displays it in block letters.
+DECLARE
+    var1 varchar2(20) := 'Hellow World';
+BEGIN
+    var1 := UPPER(var1);
+    dbms_output.put_line(var1); 
+END;
+
+5.Write a query that can subtract a smaller number from a larger number and display the result using the concept of variable.
+DECLARE 
+    larger_num INT := 20;
+    smaller_num INT := 10;
+    result INT;
+BEGIN
+    IF larger_num > smaller_num THEN
+       
+        result := larger_num - smaller_num;
+    ELSE
+        result := smaller_num - larger_num;
+    END IF;
+    
+    DBMS_OUTPUT.PUT_LINE('Result: ' || result);
+END;
+
+6.There are four numbers given i.e. 12,14,16,18.  Find out the average.
+DECLARE
+    num1 INT := 12;
+    num2 INT := 14;
+    num3 INT := 16;
+    num4 INT := 18;
+    total INT;
+    average NUMBER;
+
+BEGIN
+    total := num1 + num2 + num3 + num4;
+    average := total / 4;
+    DBMS_OUTPUT.PUT_LINE('Average: ' || average);
+END;
+
+
+7.Write a query that displays the value of pi using the concept of constant.
+DECLARE
+    pi CONSTANT NUMBER := 3.14159;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('The value of pi is: ' || pi);
+END;
+
+
+
+
+
+
+
+Part 02:
+To solve the following use the scott schema
+1.Write a query that can display the name of the department which has department number 10.
+DECLARE
+  SELECT DNAME
+FROM DEPT
+WHERE DEPTNO = 10;
+
+
+2.Write a query that can display the name of the department in lower case which has department number 20.
+
+
+SELECT LOWER(DNAME) AS department_name
+FROM DEPT
+WHERE DEPTNO = 20;
+
+
+
+3.Write a query that displays the incremented salary (sal+250) of employee Smith.
+SELECT ENAME, SAL + 250 AS incremented_salary
+FROM EMP
+WHERE ENAME = 'SMITH';
+
+
+4.Write a query that displays the hiredate of employee KING.
+SELECT HIREDATE
+FROM EMP
+WHERE ENAME = 'KING';
+
+
+5.Write a query that displays the sum of salary of all the employees.
+
+SELECT SUM(SAL) AS total_salary
+FROM EMP;
+
+
+6.Write a query that displays the salary and commission of employee Allen.
+SELECT SAL, COMM
+FROM EMP
+WHERE ENAME = 'ALLEN';
+
+
+7.Write a query that displays only those employees who have TT (double T) in their name.
+SELECT *
+FROM EMP
+WHERE ENAME LIKE '%TT%';

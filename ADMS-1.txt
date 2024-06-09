@@ -1,0 +1,392 @@
+Hogwarts is a school of witchcraft and wizardry. To ensure proper management of their data the renowned school has decided to maintain a database system. Out of many bidders your company was hired to accomplish the task. Your job is to create a relational database for Hogwarts from the requirements specified below:
+RDBMS- Oracle 10g
+Language-SQL
+Log in as User System and create a user Dumbledore who has password Phoenix. Dumbledore is granted unlimited tablespace. He is also granted the permission to create tables. After logging in with his username and password Dumbledore creates two tables i.e. Student and House. Student table has five columns containing information about students Identification Number, Name, CGPA, Blood Status and House Number. House table has three columns containing information about House Number, House Name and House Points. Here S_Id, H_Id are the primary key columns of Student and House table respectively. Student table also has a foreign key column H_No. Constraint should be applied in such a way that CGPA cannot be greater than 4.00 and House name cannot be NULL. The two tables along with their inserted data are given below:
+Table: Student			                                    Table:	House
+S_Id
+	S_Name	S_CGPA	S_BloodStatus	H_No
+2	Harry	3.45	Halfblood	11
+7	Ron	3.01	Pureblood	11
+12	Hannah		Pureblood	22
+17	Cedric	3.78	Pureblood	22
+22	Cho	3.55	Muggleborn	33
+27	Luna	2.89		33
+32	Draco	3.88	Pureblood	44
+37	Goyle	2.10	Pureblood	44
+H_Id 
+	H_Name	H_Points
+11	Gryffindor	892
+22	Hufflepuf	785
+33	Ravenclaw	789
+44	Slytherin	850
+
+
+
+
+Table: Student code:
+CREATE TABLE Student (
+    S_Id INT PRIMARY KEY,
+    S_Name VARCHAR(50),
+    S_CGPA DECIMAL(4, 2),
+    S_BloodStatus VARCHAR(20),
+    H_No INT
+);
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (2, 'Harry', 3.45, 'Halfblood', 11);
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (7, 'Ron', 3.45, 'Pureblood', 11);
+
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (12, 'Hannah', 3.50, 'Pureblood', 22); 
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (17, 'Cedric', 3.55, 'Pureblood', 22);
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (22, 'Cho', 3.55, 'Muggleborn', 33);
+
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (27, 'Luna', 2.89, 'Unknown', 33);  
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (32, 'Draco', 3.88, 'Pureblood', 44);
+
+INSERT INTO Student (S_Id, S_Name, S_CGPA, S_BloodStatus, H_No)
+VALUES (37, 'Goyle', 2.10, 'Pureblood', 44);
+
+ Table:House code:
+CREATE TABLE House (
+    H_Id INT PRIMARY KEY,
+    H_Name VARCHAR(50),
+    H_Points INT
+);
+
+
+INSERT INTO House (H_Id, H_Name, H_Points)
+VALUES(11, 'Gryffindor', 892);
+INSERT INTO House (H_Id, H_Name, H_Points)
+VALUES(22, 'Hufflepuff', 785);
+INSERT INTO House (H_Id, H_Name, H_Points)
+VALUES(33, 'Ravenclaw', 789);
+INSERT INTO House (H_Id, H_Name, H_Points)
+VALUES(44, 'Slytherin', 850);
+
+After creating the tables and inserting data based on provided requirements write Queries (Write down the question and also the answer. Give screenshot of the result of the query.You can add more Answer Box if required) according to the following specification:
+
+-using ARITHMETIC operator
+-using CONCATENATION operator
+-using COLUMN ALIAS
+-using LIKE operator
+-using IS NULL operator
+-using ORDER BY clause
+-using SUBSTR function
+-using NVL function
+-using MAX function
+-using SUM function
+-using GROUP BY clause
+-using HAVING clause
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.using ARITHMETIC operator
+SELECT
+    H.H_Name AS House_Name,
+    AVG(S.S_CGPA) + 0.5 AS Adjusted_Average_CGPA
+FROM
+    Student S
+JOIN
+    House H ON S.H_No = H.H_Id
+GROUP BY
+H.H_Name;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.using CONCATENATION operator
+SELECT
+    S.S_Name AS Student_Name,
+    H.H_Name AS House_Name,
+    CONCAT(S.S_Name, ' - ', H.H_Name) AS Student_House
+FROM
+    Student S
+INNER JOIN
+    House H ON S.H_No = H.H_Id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3.using COLUMN ALIAS
+SELECT
+    S_Name AS Student_Name,
+    S_CGPA AS GPA,
+    S_BloodStatus AS Blood_Status
+FROM
+    Student;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4.using LIKE operator
+SELECT
+    S_Id,
+    S_Name
+FROM
+    Student
+WHERE
+    S_Name LIKE 'H%';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5.using IS NULL operator
+SELECT
+    S_Id,
+    S_Name
+FROM
+    Student
+WHERE
+    S_BloodStatus IS NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.using ORDER BY clause
+SELECT
+    S_Id,
+    S_Name,
+    S_CGPA
+FROM
+    Student
+ORDER BY
+    S_CGPA DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7.using SUBSTR function
+SELECT
+    S_Id,
+    S_Name,
+    SUBSTR(S_Name, 1, 3) AS Substring_Name
+FROM
+    Student;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8.using NVL function
+SELECT
+    S_Id,
+  S_Name,
+    NVL(S_BloodStatus, 'Unknown') AS Blood_Status
+FROM
+Student;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9.using MAX function
+SELECT
+    S_Id,
+    S_Name,
+    S_CGPA
+FROM
+    Student
+WHERE
+    S_CGPA = (SELECT MAX(S_CGPA) FROM Student);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10.using SUM function
+SELECT
+    SUM(1) AS Total_Students
+FROM
+    Student;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11.using GROUP BY clause
+SELECT
+    S_BloodStatus AS Blood_Status,
+    COUNT(*) AS Number_of_Students
+FROM
+    Student
+GROUP BY
+    S_BloodStatus;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12.using HAVING clause
+SELECT
+    S_BloodStatus AS Blood_Status,
+    COUNT(*) AS Number_of_Students
+FROM
+    Student
+GROUP BY
+    S_BloodStatus
+HAVING
+    COUNT(*) > 1;
