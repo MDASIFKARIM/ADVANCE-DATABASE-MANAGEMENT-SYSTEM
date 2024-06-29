@@ -1,0 +1,251 @@
+CREATE TABLE Student_info (
+    S_Id INT PRIMARY KEY,
+    S_Name VARCHAR(50),
+    S_CGPA DECIMAL(3, 2),
+    S_BloodStatus VARCHAR(50),
+    S_BloodGroup VARCHAR(3),
+    a_id INT
+);
+
+
+INSERT INTO Student_info (S_Id, S_Name, S_CGPA, S_BloodStatus, S_BloodGroup, a_id)
+VALUES
+(1, 'Mira', 3.59, 'Halfblood', 'O+', 11),
+(2, 'Rahman', 3.90, 'Pureblood', 'A+', 11),
+(3, 'Sharon', NULL, 'Pureblood', 'B+', 22),
+(4, 'Caprio', 3.21, 'Pureblood', 'AB+', 22),
+(5, 'Winslet', 3.55, 'Muggleborn', 'AB-', 33),
+(6, 'Khadija', 2.85, NULL, 'O-', 33),
+(7, 'Shekhar', 2.30, 'Pureblood', 'O+', 44),
+(8, 'Florina', 3.10, 'Pureblood', 'B+', 44);
+
+
+
+
+CREATE TABLE Address (
+    a_id INT PRIMARY KEY,
+    city VARCHAR(50),
+    country VARCHAR(50),
+    Country_code INT
+);
+
+
+
+
+INSERT INTO Address (a_id, city, country, Country_code)
+VALUES
+(11, 'Dhaka', 'Bangladesh', 101),
+(22, 'Doha', 'Qatar', 102),
+(33, 'Washington D.C', 'USA', 103),
+(44, 'London', 'UK', 104);
+
+
+
+1.Display the name, CGPA, (CGPA-0.5) of the students from the Student_info table.
+ -- Declare variables to store results
+DECLARE
+    v_name VARCHAR2(50);
+    v_cgpa DECIMAL(3, 2);
+    v_cgpa_minus_05 DECIMAL(4, 2);
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name, S_CGPA
+        FROM Student_info
+    )
+    LOOP
+        -- Assign values from cursor
+        v_name := rec.S_Name;
+        v_cgpa := rec.S_CGPA;
+        
+        -- Calculate (CGPA - 0.5)
+        IF v_cgpa IS NOT NULL THEN
+            v_cgpa_minus_05 := v_cgpa - 0.5;
+        ELSE
+            v_cgpa_minus_05 := NULL; -- Handle NULL case
+        END IF;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Name: ' || v_name || ', CGPA: ' || v_cgpa || ', CGPA - 0.5: ' || v_cgpa_minus_05);
+    END LOOP;
+END;
+/
+
+2.Display country and country code together as “Country_info” using concatenation function.
+-- Declare variables to store results
+-- Declare variables to store results
+DECLARE
+    v_country_info VARCHAR2(100); -- Adjust the size according to your needs
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT country || ' (' || TO_CHAR(Country_code) || ')' AS Country_info
+        FROM Address
+    )
+    LOOP
+        -- Assign concatenated value from cursor
+        v_country_info := rec.Country_info;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Country_info: ' || v_country_info);
+    END LOOP;
+END;
+/
+
+3.Display the student name and student blood status with the column name “Student Name” and “Student Blood Status” from Student_info.
+-- Declare variables to store results
+DECLARE
+    v_student_name VARCHAR2(50);
+    v_student_blood_status VARCHAR2(50);
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name AS "Student Name", S_BloodStatus AS "Student Blood Status"
+        FROM Student_info
+    )
+    LOOP
+        -- Assign values from cursor
+        v_student_name := rec."Student Name";
+        v_student_blood_status := rec."Student Blood Status";
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Student Name: ' || v_student_name || ', Student Blood Status: ' || v_student_blood_status);
+    END LOOP;
+END;
+/
+
+4.Display all students who have only one ‘o’ in their name.
+-- Declare variables to store results
+DECLARE
+    v_student_name VARCHAR2(50);
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name
+        FROM Student_info
+        WHERE LENGTH(S_Name) - LENGTH(REPLACE(S_Name, 'o', '')) = 1
+    )
+    LOOP
+        -- Assign value from cursor
+        v_student_name := rec.S_Name;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Student Name with exactly one ''o'': ' || v_student_name);
+    END LOOP;
+END;
+/
+
+5.Display the student name , CGPA who have null value in their CGPA.
+-- Declare variables to store results
+DECLARE
+    v_student_name VARCHAR2(50);
+    v_cgpa DECIMAL(3, 2); -- Assuming CGPA is decimal(3,2) based on previous examples
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name, S_CGPA
+        FROM Student_info
+        WHERE S_CGPA IS NULL
+    )
+    LOOP
+        -- Assign values from cursor
+        v_student_name := rec.S_Name;
+        v_cgpa := rec.S_CGPA;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Student Name: ' || v_student_name || ', CGPA: ' || v_cgpa);
+    END LOOP;
+END;
+/
+
+6.Display the city, country, country_code and those must be shown from highest numbered country code to lowest numbered country code.
+-- Declare variables to store results
+DECLARE
+    v_city VARCHAR2(50);
+    v_country VARCHAR2(50);
+    v_country_code INT;
+BEGIN
+    -- Cursor to fetch required data, ordered by country_code descending
+    FOR rec IN (
+        SELECT city, country, Country_code
+        FROM Address
+        ORDER BY Country_code DESC
+    )
+    LOOP
+        -- Assign values from cursor
+        v_city := rec.city;
+        v_country := rec.country;
+        v_country_code := rec.Country_code;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('City: ' || v_city || ', Country: ' || v_country || ', Country Code: ' || v_country_code);
+    END LOOP;
+END;
+/
+
+7.Display the student name, student CGPA and student blood status together where the blood status is pureblood using SUBSTR.
+-- Declare variables to store results
+DECLARE
+    v_student_info VARCHAR2(100); -- Adjust the size according to your needs
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name, S_CGPA, S_BloodStatus
+        FROM Student_info
+        WHERE S_BloodStatus = 'Pureblood'
+    )
+    LOOP
+        -- Build concatenated string using SUBSTR
+        v_student_info := 'Student Name: ' || rec.S_Name ||
+                          ', CGPA: ' || TO_CHAR(rec.S_CGPA) ||
+                          ', Blood Status: ' || SUBSTR(rec.S_BloodStatus, 1, LENGTH(rec.S_BloodStatus)); -- assuming Blood Status is varchar
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE(v_student_info);
+    END LOOP;
+END;
+/
+
+8.Show all the students with their CGPA and blood status. If there is any null value use NVL function.
+-- Declare variables to store results
+DECLARE
+    v_student_name VARCHAR2(50);
+    v_cgpa DECIMAL(3, 2);
+    v_blood_status VARCHAR2(50);
+BEGIN
+    -- Cursor to fetch required data
+    FOR rec IN (
+        SELECT S_Name, NVL(S_CGPA, -1) AS S_CGPA, NVL(S_BloodStatus, 'Unknown') AS S_BloodStatus
+        FROM Student_info
+    )
+    LOOP
+        -- Assign values from cursor
+        v_student_name := rec.S_Name;
+        v_cgpa := rec.S_CGPA;
+        v_blood_status := rec.S_BloodStatus;
+        
+        -- Display results
+        DBMS_OUTPUT.PUT_LINE('Student Name: ' || v_student_name || ', CGPA: ' || v_cgpa || ', Blood Status: ' || v_blood_status);
+    END LOOP;
+END;
+/
+
+9.Find out the student who is holding maximum CGPA.
+-- Declare variables to store results
+DECLARE
+    v_student_name VARCHAR2(50);
+    v_max_cgpa DECIMAL(3, 2);
+BEGIN
+    -- Retrieve student with maximum CGPA
+    SELECT S_Name, S_CGPA
+    INTO v_student_name, v_max_cgpa
+    FROM Student_info
+    WHERE S_CGPA = (SELECT MAX(S_CGPA) FROM Student_info);
+
+    -- Display results
+    DBMS_OUTPUT.PUT_LINE('Student with Maximum CGPA: ' || v_student_name || ', CGPA: ' || v_max_cgpa);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No student records found.');
+END;
+/
