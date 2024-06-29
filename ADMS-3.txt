@@ -1,0 +1,154 @@
+Normalize the ER Diagram given below up to 3rd Normal Form and finalize the tables that needs to be created. Then (in Oracle using SQL) write down the queries that are required to create all the tables with necessary constraints. Also insert at least 3 rows of data in each created table.
+For reference see NormalizationTutorial.
+
+·  Driver: Driver_ID (PK), First_Name, Last_Name, License_Number, Experience_Year
+·  Supervisor: Supervisor_ID (PK), First_Name, Last_Name, Experience_Year
+·  Bus: Bus_Number (PK), Type, Model, Capacity
+·  Route: Route_ID (PK), Start_Location, End_Location, Distance, Departure_Time
+·  Ticket: Ticket_Number (PK), Ticket_Status, Ticket_Price, Route_ID (FK), Bus_Number (FK)
+·  Passenger: Passenger_ID (PK), First_Name, Last_Name, National_ID, Name, Phone_Number, Gender
+·  Transaction: Transaction_ID (PK), Date, Total_Amount, Payment_Type_ID (FK)
+·  Payment_Type: Payment_Type_ID (PK), Payment_Type, Payment_Method
+
+-- Driver table
+CREATE TABLE Driver (
+    Driver_ID NUMBER PRIMARY KEY,
+    First_Name VARCHAR2(50),
+    Last_Name VARCHAR2(50),
+    License_Number VARCHAR2(20),
+    Experience_Year NUMBER
+);
+
+-- Supervisor table
+CREATE TABLE Supervisor (
+    Supervisor_ID NUMBER PRIMARY KEY,
+    First_Name VARCHAR2(50),
+    Last_Name VARCHAR2(50),
+    Experience_Year NUMBER
+);
+
+-- Bus table
+CREATE TABLE Bus (
+    Bus_Number NUMBER PRIMARY KEY,
+    Type VARCHAR2(50),
+    Model VARCHAR2(50),
+    Capacity NUMBER
+);
+
+-- Route table
+CREATE TABLE Route (
+    Route_ID NUMBER PRIMARY KEY,
+    Start_Location VARCHAR2(100),
+    End_Location VARCHAR2(100),
+    Distance NUMBER,
+    Departure_Time DATE
+);
+
+-- Ticket table
+CREATE TABLE Ticket (
+    Ticket_Number NUMBER PRIMARY KEY,
+    Ticket_Status VARCHAR2(50),
+    Ticket_Price NUMBER,
+    Route_ID NUMBER,
+    Bus_Number NUMBER,
+    FOREIGN KEY (Route_ID) REFERENCES Route(Route_ID),
+    FOREIGN KEY (Bus_Number) REFERENCES Bus(Bus_Number)
+);
+
+-- Passenger table
+CREATE TABLE Passenger (
+    Passenger_ID NUMBER PRIMARY KEY,
+    First_Name VARCHAR2(50),
+    Last_Name VARCHAR2(50),
+    National_ID VARCHAR2(20),
+    Name VARCHAR2(100),
+    Phone_Number VARCHAR2(20),
+    Gender VARCHAR2(10)
+);
+
+-- Transaction table
+CREATE TABLE Transaction (
+    Transaction_ID NUMBER PRIMARY KEY,
+    Date DATE,
+    Total_Amount NUMBER,
+    Payment_Type_ID NUMBER,
+    FOREIGN KEY (Payment_Type_ID) REFERENCES Payment_Type(Payment_Type_ID)
+);
+
+-- Payment_Type table
+CREATE TABLE Payment_Type (
+    Payment_Type_ID NUMBER PRIMARY KEY,
+    Payment_Type VARCHAR2(50),
+    Payment_Method VARCHAR2(50)
+);
+
+-- Insert sample data into Driver table
+INSERT INTO Driver (Driver_ID, First_Name, Last_Name, License_Number, Experience_Year)
+VALUES (1, 'John', 'Doe', 'L12345', 10),
+       (2, 'Jane', 'Smith', 'L67890', 5),
+       (3, 'Mike', 'Johnson', 'L54321', 7);
+
+-- Insert sample data into Supervisor table
+INSERT INTO Supervisor (Supervisor_ID, First_Name, Last_Name, Experience_Year)
+VALUES (1, 'Alice', 'Brown', 8),
+       (2, 'Bob', 'Taylor', 12),
+       (3, 'Charlie', 'Davis', 6);
+
+-- Insert sample data into Bus table
+INSERT INTO Bus (Bus_Number, Type, Model, Capacity)
+VALUES (1, 'Double-Decker', 'Model X', 50),
+       (2, 'Mini-Bus', 'Model Y', 20),
+       (3, 'Coach', 'Model Z', 40);
+
+-- Insert sample data into Route table
+INSERT INTO Route (Route_ID, Start_Location, End_Location, Distance, Departure_Time)
+VALUES (1, 'City A', 'City B', 100, TO_DATE('2024-07-01 08:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+       (2, 'City B', 'City C', 200, TO_DATE('2024-07-01 10:00:00', 'YYYY-MM-DD HH24:MI:SS')),
+       (3, 'City A', 'City C', 150, TO_DATE('2024-07-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+
+-- Insert sample data into Ticket table
+INSERT INTO Ticket (Ticket_Number, Ticket_Status, Ticket_Price, Route_ID, Bus_Number)
+VALUES (1, 'Confirmed', 100, 1, 1),
+       (2, 'Pending', 150, 2, 2),
+       (3, 'Cancelled', 200, 3, 3);
+
+-- Insert sample data into Passenger table
+INSERT INTO Passenger (Passenger_ID, First_Name, Last_Name, National_ID, Name, Phone_Number, Gender)
+VALUES (1, 'David', 'Clark', 'N123456789', 'David Clark', '0123456789', 'Male'),
+       (2, 'Emma', 'Wilson', 'N987654321', 'Emma Wilson', '0987654321', 'Female'),
+       (3, 'Lucas', 'Martinez', 'N567890123', 'Lucas Martinez', '0567890123', 'Male');
+
+-- Insert sample data into Transaction table
+INSERT INTO Transaction (Transaction_ID, Date, Total_Amount, Payment_Type_ID)
+VALUES (1, TO_DATE('2024-06-28', 'YYYY-MM-DD'), 100, 1),
+       (2, TO_DATE('2024-06-29', 'YYYY-MM-DD'), 150, 2),
+       (3, TO_DATE('2024-06-30', 'YYYY-MM-DD'), 200, 3);
+
+-- Insert sample data into Payment_Type table
+INSERT INTO Payment_Type (Payment_Type_ID, Payment_Type, Payment_Method)
+VALUES (1, 'Credit Card', 'Online'),
+       (2, 'Debit Card', 'Online'),
+       (3, 'Cash', 'Offline');
+-- Select all data from Driver table
+SELECT * FROM Driver;
+
+-- Select all data from Supervisor table
+SELECT * FROM Supervisor;
+
+-- Select all data from Bus table
+SELECT * FROM Bus;
+
+-- Select all data from Route table
+SELECT * FROM Route;
+
+-- Select all data from Ticket table
+SELECT * FROM Ticket;
+
+-- Select all data from Passenger table
+SELECT * FROM Passenger;
+
+-- Select all data from Transaction table
+SELECT * FROM Transaction;
+
+-- Select all data from Payment_Type table
+SELECT * FROM Payment_Type;
