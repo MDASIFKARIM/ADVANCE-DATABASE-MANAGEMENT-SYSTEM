@@ -1,0 +1,166 @@
+PL/SQL
+To solve the following use the scott schema
+
+1.Create a cursor that can output all the data from salgrade table.
+
+
+DECLARE
+   
+    TYPE salgrade_record IS RECORD (
+        grade  SALGRADE.GRADE%TYPE,
+        losal  SALGRADE.LOSAL%TYPE,
+        hisal  SALGRADE.HISAL%TYPE
+    );
+
+   
+    CURSOR salgrade_cursor IS
+        SELECT grade, losal, hisal FROM SALGRADE;
+
+   
+    salgrade_rec salgrade_record;
+BEGIN
+    
+    OPEN salgrade_cursor;
+
+    
+    LOOP
+       
+        FETCH salgrade_cursor INTO salgrade_rec;
+
+       
+        EXIT WHEN salgrade_cursor%NOTFOUND;
+
+        
+        DBMS_OUTPUT.PUT_LINE('GRADE: ' || salgrade_rec.grade ||
+                             ', LOSAL: ' || salgrade_rec.losal ||
+                             ', HISAL: ' || salgrade_rec.hisal);
+    END LOOP;
+
+    
+    CLOSE salgrade_cursor;
+END;
+
+
+
+
+
+2.Create a record that can output the id, name, job, and hiredate of the employee whose Id is 7654.
+
+
+
+DECLARE
+    
+    TYPE emp_record IS RECORD (
+        empno    EMP.EMPNO%TYPE,
+        ename    EMP.ENAME%TYPE,
+        job      EMP.JOB%TYPE,
+        hiredate EMP.HIREDATE%TYPE
+    );
+
+   
+    emp_rec emp_record;
+BEGIN
+   
+    SELECT empno, ename, job, hiredate
+    INTO emp_rec
+    FROM EMP
+    WHERE empno = 7654;
+
+   
+    DBMS_OUTPUT.PUT_LINE('ID: ' || emp_rec.empno ||
+                         ', Name: ' || emp_rec.ename ||
+                         ', Job: ' || emp_rec.job ||
+                         ', Hiredate: ' || TO_CHAR(emp_rec.hiredate, 'DD-MM-YYYY'));
+EXCEPTION
+    
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No employee found with ID 7654');
+    
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+
+
+
+
+
+
+
+
+
+3.Create a trigger in such a way that whenever a new row is inserted into the salgrade table an output ‘New Row Added’ is generated.
+
+CREATE OR REPLACE TRIGGER trg_after_insert_salgrade
+AFTER INSERT ON SALGRADE
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('New Row Added');
+END;
+
+
+
+
+
+
+
+
+
+
+4.Create a package that contains a procedure which can display the grade whose losal and hisal is passed as its parameter. 
+
+Package Specification:
+
+CREATE OR REPLACE PACKAGE salgrade_pkg AS
+    PROCEDURE display_grade(p_losal IN SALGRADE.LOSAL%TYPE, p_hisal IN SALGRADE.HISAL%TYPE);
+END salgrade_pkg;
+
+
+
+Package Body
+
+CREATE OR REPLACE PACKAGE BODY salgrade_pkg AS
+    PROCEDURE display_grade(p_losal IN SALGRADE.LOSAL%TYPE, p_hisal IN SALGRADE.HISAL%TYPE) IS
+        v_grade SALGRADE.GRADE%TYPE;
+    BEGIN
+        
+        SELECT grade INTO v_grade
+        FROM SALGRADE
+        WHERE losal = p_losal AND hisal = p_hisal;
+
+        
+        DBMS_OUTPUT.PUT_LINE('Grade: ' || v_grade);
+    EXCEPTION
+       
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('No grade found for the specified losal and hisal.');
+        
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+    END display_grade;
+END salgrade_pkg;
+
+
+
+
+
+
+
+
+
+
+
+To use the procedure in the package, you can execute the following PL/SQL block:
+
+
+BEGIN
+    salgrade_pkg.display_grade(1201, 1400);
+END;
+
+
+
+
+
+
+
+
