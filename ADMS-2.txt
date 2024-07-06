@@ -1,3 +1,5 @@
+---------------------------------CREATE TABLE and DATA--------------------------------------
+
 CREATE TABLE DEPT
        (DEPTNO NUMBER(2) CONSTRAINT PK_DEPT PRIMARY KEY,
 	DNAME VARCHAR2(14) ,
@@ -65,6 +67,14 @@ INSERT INTO SALGRADE VALUES (3,1401,2000);
 INSERT INTO SALGRADE VALUES (4,2001,3000);
 INSERT INTO SALGRADE VALUES (5,3001,9999);
 COMMIT;
+
+
+
+
+
+
+
+
 PL/SQL
 Part 01:
 1.Write a query that displays Hello ADBMS Section A using the concept of literal.
