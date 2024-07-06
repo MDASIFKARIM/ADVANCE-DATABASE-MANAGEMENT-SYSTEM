@@ -4,6 +4,8 @@ To solve the following use the scott schema
 1.Create a cursor that can output all the data from salgrade table.
 
 
+
+
 DECLARE
    
     TYPE salgrade_record IS RECORD (
@@ -45,6 +47,8 @@ END;
 
 
 2.Create a record that can output the id, name, job, and hiredate of the employee whose Id is 7654.
+
+
 
 
 
@@ -91,6 +95,8 @@ END;
 
 3.Create a trigger in such a way that whenever a new row is inserted into the salgrade table an output ‘New Row Added’ is generated.
 
+
+
 CREATE OR REPLACE TRIGGER trg_after_insert_salgrade
 AFTER INSERT ON SALGRADE
 FOR EACH ROW
@@ -109,7 +115,9 @@ END;
 
 4.Create a package that contains a procedure which can display the grade whose losal and hisal is passed as its parameter. 
 
-Package Specification:
+
+
+1.Package Specification:
 
 CREATE OR REPLACE PACKAGE salgrade_pkg AS
     PROCEDURE display_grade(p_losal IN SALGRADE.LOSAL%TYPE, p_hisal IN SALGRADE.HISAL%TYPE);
@@ -117,7 +125,7 @@ END salgrade_pkg;
 
 
 
-Package Body
+2.Package Body
 
 CREATE OR REPLACE PACKAGE BODY salgrade_pkg AS
     PROCEDURE display_grade(p_losal IN SALGRADE.LOSAL%TYPE, p_hisal IN SALGRADE.HISAL%TYPE) IS
@@ -150,7 +158,7 @@ END salgrade_pkg;
 
 
 
-To use the procedure in the package, you can execute the following PL/SQL block:
+3.To use the procedure in the package, you can execute the following PL/SQL block:
 
 
 BEGIN
