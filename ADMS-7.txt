@@ -1,0 +1,166 @@
+----------------------------------PL/SQL Tutorial Supplementary----------------------------------------------------
+
+Belle is held captive by the mighty Beast in his ominous castle. She is forbidden to go outside its gates but is free to roam around inside it. However, the only place Belle seems to enjoy is the library as she loves to read story books. Seeing this, Beast orders that his library should be restructured and in order to do this he has hired your company. Your job is to create a relational database for his Library from the requirements specified below:
+RDBMS- Oracle 10g
+Language-SQL and PL/SQL
+
+1.Log in as system and create a user Students having password ADBMS. The user Students is granted unlimited tablespace. Students is also granted the permission to create tables, view and sequence. 
+
+-----------------------CODE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE USER Students IDENTIFIED BY ADBMS;
+
+GRANT UNLIMITED TABLESPACE TO Students;
+
+GRANT CREATE TABLE, CREATE VIEW, CREATE SEQUENCE TO Students;
+
+
+
+2.After logging in with username and password Students run the queries from the Supplementary section of PL/SQL Tutorial to create tables and insert data into the created tables.
+
+-----------------------CODE-------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE TABLE Books (
+    BookID NUMBER PRIMARY KEY,
+    Title VARCHAR2(100),
+    Author VARCHAR2(100),
+    Edition NUMBER,
+    CategoryID NUMBER
+);
+
+
+
+CREATE TABLE Category (
+    CategoryID NUMBER PRIMARY KEY,
+    CategoryName VARCHAR2(100)
+);
+
+
+
+
+
+
+INSERT INTO Category (CategoryID, CategoryName) VALUES (1, 'Science Fiction');
+INSERT INTO Category (CategoryID, CategoryName) VALUES (2, 'Fantasy');
+INSERT INTO Category (CategoryID, CategoryName) VALUES (3, 'Non-fiction');
+
+INSERT INTO Books (BookID, Title, Author, Edition, CategoryID) 
+VALUES (111, 'The Time Machine', 'H.G. Wells', 10, 1);
+INSERT INTO Books (BookID, Title, Author, Edition, CategoryID) 
+VALUES (112, 'The Hobbit', 'J.R.R. Tolkien', 15, 2);
+INSERT INTO Books (BookID, Title, Author, Edition, CategoryID) 
+VALUES (113, 'Sapiens', 'Yuval Noah Harari', 1, 3);
+
+
+3.Create a function that returns the total number of books stored inside the library.
+
+-----------------------CODE----------------------------------------------------------
+CREATE OR REPLACE FUNCTION get_total_books RETURN NUMBER IS
+    total_books NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO total_books FROM Books;
+    RETURN total_books;
+END;
+
+
+
+
+4.Beast has ordered that all the books in his library should be of the latest edition. So, create a procedure to update the value of the edition column of book table from 10 to 20.
+
+-----------------------CODE---------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE update_book_edition IS
+BEGIN
+    UPDATE Books SET Edition = 20 WHERE Edition = 10;
+    COMMIT;
+END;
+
+
+
+5.Create a record that can output the name of the book whose id is 111.
+
+-----------------------CODE----------------------------------------------
+DECLARE
+    book_title Books.Title%TYPE;
+BEGIN
+    SELECT Title INTO book_title FROM Books WHERE BookID = 111;
+    DBMS_OUTPUT.PUT_LINE('Book Title: ' || book_title);
+END;
+
+
+
+6.Create a record that can output the name of all the books inside the library.
+
+-----------------------CODE------------------------------------------------------
+DECLARE
+    book_title Books.Title%TYPE;
+    CURSOR book_cursor IS SELECT Title FROM Books;
+BEGIN
+    FOR record IN book_cursor LOOP
+        DBMS_OUTPUT.PUT_LINE('Book Title: ' || record.Title);
+    END LOOP;
+END;
+
+
+
+7.Create a cursor that can output the id and name of all the categories the books are sorted in.
+
+-----------------------CODE---------------------------------------------------------------------
+DECLARE
+    CURSOR category_cursor IS SELECT CategoryID, CategoryName FROM Category;
+BEGIN
+    FOR record IN category_cursor LOOP
+        DBMS_OUTPUT.PUT_LINE('Category ID: ' || record.CategoryID || ', Name: ' || record.CategoryName);
+    END LOOP;
+END;
+
+
+
+8.Create a trigger in such a way that whenever a new row is inserted into the category table an output ‘New Category Added’ is generated.
+
+-----------------------CODE---------------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE TRIGGER category_insert_trigger
+AFTER INSERT ON Category
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('New Category Added');
+END;
+
+
+
+
+
+9.Create a trigger in such a way that whenever a row is deleted from the category table an output ‘A Category Deleted’ is generated.
+
+-----------------------CODE----------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE TRIGGER category_delete_trigger
+AFTER DELETE ON Category
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('A Category Deleted');
+END;
+
+
+
+
+
+10.Create a package that contains a procedure which can display the book name of any book whose id is passed as its parameter. 
+
+-----------------------CODE-------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE PACKAGE book_package AS
+    PROCEDURE get_book_name(p_book_id IN NUMBER);
+END book_package;
+
+
+
+
+CREATE OR REPLACE PACKAGE BODY book_package AS
+    PROCEDURE get_book_name(p_book_id IN NUMBER) IS
+        book_title Books.Title%TYPE;
+    BEGIN
+        SELECT Title INTO book_title FROM Books WHERE BookID = p_book_id;
+        DBMS_OUTPUT.PUT_LINE('Book Title: ' || book_title);
+    END get_book_name;
+END book_package;
+
+
+
+
+
